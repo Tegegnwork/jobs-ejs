@@ -7,7 +7,7 @@ const express = require("express");
 const session = require("express-session");
 const flash = require('connect-flash'); // Import flash
 const MongoDBStore = require("connect-mongodb-session")(session);
-
+const connectDB = require("./db/connect");
 const app = express();
 const url = process.env.MONGO_URI;
 
@@ -61,6 +61,16 @@ app.post("/secretWord", (req, res) => {
   req.flash("info", "Secret word updated successfully!");
   
   res.redirect("/secretWord");
+  const firstLetter = req.body.secretWord?.charAt(0).toUpperCase();
+if (firstLetter === "P") {
+    req.flash("error", [
+        "That word won't work!", 
+        "You can't use words that start with p."
+    ]);
+} else {
+    req.session.secretWord = req.body.secretWord;
+    req.flash("info", "The secret word was changed.");
+}
 });
 
 // 404 handler
@@ -78,6 +88,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
+    await connectDB(process.env.MONGO_URI);
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
