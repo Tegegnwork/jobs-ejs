@@ -58,7 +58,7 @@ app.use(require("./middleware/storeLocals"));
 
 // Routes
 app.get("/", (req, res) => res.render("index"));
-app.use("/session", require("./routes/sessionRoutes"));
+app.use("/sessions", require("./routes/sessionRoutes"));
 app.use("/secretWord", require("./middleware/auth"), require("./routes/secretWord"));
 
 // 404

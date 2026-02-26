@@ -1,7 +1,7 @@
 <h1>The Jobs EJS Application</h1>
 <% if (user) { %>
    <p>User <%= user.name %> is logged on.</p>
-   <form method="POST" action="/session/logoff">
+   <form method="POST" action="/sessions/logoff">
    <button>Logoff</button>
    </form>
 <% } %>

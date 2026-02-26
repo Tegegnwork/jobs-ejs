@@ -1,13 +1,7 @@
-const parseValidationErr = (err) => {
-  const errors = {};
-  if (err.inner) {
-    err.inner.forEach((e) => {
-      if (!errors[e.path]) errors[e.path] = e.message;
-    });
-  } else if (err.path) {
-    errors[err.path] = err.message;
-  }
-  return errors;
+const parseValidationErrors = (e, req) => {
+  const keys= Object.keys(e.errors);
+  keys.forEach((key) => {
+    req.flash("error", key + ": " + e.errors[key].properties.message);
+  });
 };
-
-module.exports = parseValidationErr;
+module.exports = parseValidationErrors;
