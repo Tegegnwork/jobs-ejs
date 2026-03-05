@@ -1,19 +1,23 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs") %>
-<form method="POST">
+
+<form action="/sessions/logon" method="POST">
+  <input type="hidden" name="_csrf" value="<%= _csrf %>">
+
   <div>
-    <label name="email">Enter your email:</label>
-    <input name="email" />
+    <label for="email">Enter your email:</label>
+    <input id="email" name="email" required />
   </div>
+
   <div>
-    <label name="password">Enter your password:</label>
-    <input type="password" name="password" />
+    <label for="password">Enter your password:</label>
+    <input id="password" type="password" name="password" required />
   </div>
+
   <div>
-    <button>Logon</button>
-    <a href="/">
-      <button type="button">Cancel</button>
-    </a>
+    <button type="submit">Logon</button>
+    <a href="/">Cancel</a>
   </div>
 </form>
+
 <%- include("partials/footer.ejs") %>
