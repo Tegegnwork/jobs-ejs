@@ -1,8 +1,9 @@
 const User = require("../models/user");
 const parseVErr = require("../util/parseValidationErr");
+const csrf = require("host-csrf");
 
 const registerShow = (req, res) => {
-  res.render("register");
+  res.render("register", { _csrf: csrf.getToken(req, res) });
 };
 
 const registerDo = async (req, res, next) => {
@@ -20,12 +21,15 @@ const registerDo = async (req, res, next) => {
     } else {
       return next(e);
     }
-    return res.render("register", { errors: req.flash("errors") });
+    return res.render("register", { errors: req.flash("error") });
+    
+
   }
   res.redirect("/");
 };
 
 const logoff = (req, res) => {
+  csrf.clearToken(req, res);
   req.session.destroy(function (err) {
     if (err) {
       console.log(err);
@@ -38,7 +42,8 @@ const logonShow = (req, res) => {
   if (req.user) {
     return res.redirect("/");
   }
-  res.render("logon");};
+  res.render("logon", { _csrf: csrf.getToken(req, res) });
+};
 
 module.exports = {
   registerShow,
