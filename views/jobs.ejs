@@ -1,5 +1,7 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs") %>
 <h2>Jobs List</h2>
-    <table id="jobs-table">
+<table id="jobs-table">
       <tr id="jobs-table-header">
         <th>Company</th>
         <th>Position</th>
@@ -12,9 +14,18 @@
             <td><%= job.company %></td>
             <td><%= job.position %></td>
             <td><%= job.status %></td>
-            <td><button type="button">edit</button></td>
-            <td><button type="button">delete</button></td>
+            <td><a href="/jobs/edit/<%= job.id %>"><button type="button">edit</button></a></td>
+<td>
+  <form method="POST" action="/jobs/delete/<%= job.id %>" style="display: inline">
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+    <button type="submit">delete</button>
+  </form>
+</td>
+
           </tr>
         <% }) %>
       <% } %>
+      <a href="/jobs/new"><button type="button">Add Job</button></a> 
     </table>
+    
+<%- include("partials/footer.ejs") %>

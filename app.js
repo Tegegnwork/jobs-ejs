@@ -10,7 +10,8 @@ const connectFlash = require("connect-flash");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const csrf = require("host-csrf");
-
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
 const app = express();
 const url = process.env.MONGO_URI;
 
@@ -19,10 +20,18 @@ app.set("view engine", "ejs");
 
 // Security
 app.use(helmet());
+app.use(xss());
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+    message: "Too many requests from this IP, please try again later.",
+  }),
+);
 
 // Body parsing
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser(process.env.COOKIE_SECRET || "default-cookie-secret"));
+app.use(cookieParser(process.env.COOKIE_SECRET ));
 
 // MongoDB session store
 const store = new MongoDBStore({
@@ -72,6 +81,7 @@ app.use((req, res, next) => {
 // Routes
 app.get("/", (req, res) => res.render("index"));
 app.use("/sessions", require("./routes/sessionRoutes"));
+app.use("/jobs", require("./middleware/auth"), require("./routes/jobs"));
 app.use(
   "/secretWord",
   require("./middleware/auth"),
